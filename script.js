@@ -10,7 +10,8 @@ const questions = [
                 isAudioVisible: false,
                 correctAns: 1,
                 questionLength: '1/5',
-                desc: 'Kenapa jawabannya B? Karena ia menyerap air dari benda yang dikeringkan'
+                desc: 'Kenapa jawabannya B? Karena ia menyerap air dari benda yang dikeringkan',
+                password: 'p@55vv0rd'
         },
         {
                 question: 'Sebuah sapi menghadap ke arah Barat Laut. Ke arah manakah ekornya menghadap?',
@@ -22,8 +23,9 @@ const questions = [
                 audio: null,
                 isAudioVisible: false,
                 correctAns: 2,
-                questionLength: '2/5',
-                desc: 'Pasti bingung yaa? Ekor sapi selalu menghadap ke bawah, terlepas dari arah badannya'
+                questionLength: '2/6',
+                desc: 'Pasti bingung yaa? Ekor sapi selalu menghadap ke bawah, terlepas dari arah badannya',
+                password: '@r1y'
         },
         {
                 question: 'Jika 1 = 0, 8 = 2, dan 90 = 1, maka berapakah nilai dari 88?',
@@ -35,8 +37,9 @@ const questions = [
                 audio: null,
                 isAudioVisible: false,
                 correctAns: 0,
-                questionLength: '3/5',
-                desc: 'Kamu nggak nyadar polanya?'
+                questionLength: '3/6',
+                desc: 'Kamu nggak nyadar polanya?',
+                password: 'qu|%z1t!'
         },
         {
                 question: 'Ada seseorang yang lahir di Arab, besar di Arab, dan tinggal di Arab, tapi dia sama sekali tidak bisa bahasa Arab. Siapakah dia?',
@@ -48,8 +51,9 @@ const questions = [
                 audio: 'test.mp3',
                 isAudioVisible: true,
                 correctAns: 2,
-                questionLength: '4/5',
-                desc: 'Unta memang tinggal di Arab tapi tidak bisa bicara'
+                questionLength: '4/6',
+                desc: 'Unta memang tinggal di Arab tapi tidak bisa bicara',
+                password: 'pyR@AA1d'
         },
         {
                 question: 'Jika kamu memegang 3 apel dan 4 jeruk di tangan kanan, lalu 4 apel dan 3 jeruk di tangan kiri, apa yang kamu miliki?',
@@ -61,8 +65,29 @@ const questions = [
                 audio: null,
                 isAudioVisible: false,
                 correctAns: 1,
-                questionLength: '5/5',
-                desc: 'Secara logika, tangan manusia normal tidak bisa menggenggam buah sebanyak itu sekaligus'
+                questionLength: '5/6',
+                desc: 'Secara logika, tangan manusia normal tidak bisa menggenggam buah sebanyak itu sekaligus',
+                password: 'l0Ngh@Nd'
+        },
+        {
+                question: `
+                Suara apa yang kamu dengar?
+                <button onclick="document.getElementById('audio').play()">Putar suara</button>\n<span style="opacity:0.4;margin:0">Perbesar suara hpmu agar terdengar lebih jelas.</span>
+                <audio style="display:none;" id="audio" controls>
+                        <source src="./test.mp3" type="audio/mpeg">
+                </audio>
+                `,
+                answer: [
+                        'System off',
+                        'Sittemowf',
+                        'See them wolf'
+                ],
+                audio: null,
+                isAudioVisible: false,
+                correctAns: 0,
+                questionLength: '6/6',
+                desc: 'Apakah telingamu bermasalah?',
+                password: '5Y1sT3m'
         }
 ];
 
@@ -82,6 +107,8 @@ function initQuestions() {
                 <div onclick="choice(2)" class="ans c">${currentQuestion.answer[2]}</div>
         </div>
         `;
+        
+        if(now===5) document.getElementById('audio').volume = 0.05;
 }
 
 function choice(index) {
@@ -116,10 +143,62 @@ function updateQuestion(inp) {
         alertEl.classList.add('hide');
         
         if(inp === 'correct') {
-                if(now < questions.length) now++;
-                initQuestions();
+                if(now < (questions.length - 1)) {
+                        now++;
+                        initQuestions();
+                } else {
+                        document.getElementById('endWindow').classList.remove('hide');
+                        document.getElementById('audioJP').play();
+                }
         } else {
                 initQuestions();
         }
 }
-initQuestions();
+
+function closeWw() {
+        initQuestions();
+        document.getElementById('welcomeWindow').style.display = 'none';
+        document.getElementById('questionCard').style.animation = 'popOutFade 0.5s';
+        document.getElementById('mainHeader').style.animation = 'popOutFade 0.5s';
+}
+
+function openClue() {
+        const clueEl = document.getElementById('clue');
+        clueEl.classList.remove('hide');
+        clueEl.innerHTML = `
+                <div class="AlertContainer">
+                        <h2>Password</h2>
+                        <p>Masukan password untuk mengakses clue.</p>
+                        <input id="passwordInp" placeholder="Password...">
+                        <button class="submit" onclick="inputPassword()">Submit</button>
+                        <button onclick="closeClue()">Batal</button>
+                </div>`;
+} function closeClue() { document.getElementById('clue').classList.add('hide'); }
+
+function inputPassword() {
+        const clueEl = document.getElementById('clue');
+        const inp = document.getElementById('passwordInp');
+        const currentQuestion = questions[now];
+        const option = ['A.', 'B.', 'C.'];
+        const clues = currentQuestion.correctAns;
+        if(inp.value===currentQuestion.password) {
+                //alert('Benar!');
+                
+                clueEl.innerHTML = `
+                <div class="AlertContainer">
+                        <h2>Clue</h2>
+                        <p>Jawabannya adalah: <strong>${option[clues]} ${currentQuestion.answer[clues]}</strong>.</p>
+                        <button onclick="closeClue()">Oke</button>
+                </div>`;
+        } else {
+                //alert('salah');
+                clueEl.innerHTML = `
+                <div class="AlertContainer">
+                        <h2>Password</h2>
+                        <p>Masukan password untuk mengakses clue.</p>
+                        <input id="passwordInp" placeholder="Password salah!">
+                        <button class="submit" onclick="inputPassword()">Submit</button>
+                        <button onclick="closeClue()">Batal</button>
+                </div>`;
+        }
+}

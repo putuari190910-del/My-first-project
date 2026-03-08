@@ -57,6 +57,15 @@ h1 span {
         width: 100%;
 }
 
+.questionMark button {
+        background: var(--accent2);
+        border: none;
+        padding: 4px 8px;
+        border-radius: 8px;
+        font-family: fredoka, roboto, sans-serif;
+        color: var(--text-color);
+}
+
 .answerContainer {
         display: flex;
         flex-direction: column;
@@ -74,6 +83,11 @@ h1 span {
         width: calc(100% - 60px);
         position: relative;
         overflow: hidden;
+        transition: 0.3s;
+} .ans:active {
+        transform: scale(1.05) translateY(-5px);
+        box-shadow: var(--shadow);
+        border: 2px dashed var(--accent2);
 }
 
 .ans::before {
@@ -111,7 +125,14 @@ h1 span {
         place-items: center;
         border-radius: 15px;
         border: 2px dashed var(--accent2);
+        transition: 0.3s;
 } .clue svg { color: var(--accent); width: calc(100% - 20%); height: calc(100% - 40%); }
+
+.clue:active, #questionCount:active {
+        transform: scale(1.05) translateY(-5px);
+        border: 2px solid var(--accent2);
+        box-shadow: var(--shadow);
+}
 
 #alert {
         position: fixed;
@@ -124,7 +145,7 @@ h1 span {
         animation: fade 0.3s;
 } #alert.hide { display: none; }
 
-#alert .AlertContainer {
+#alert .AlertContainer, #clue .AlertContainer {
         background: var(--background);
         width: 250px; height: auto;
         border-radius: 25px;
@@ -192,4 +213,80 @@ h1 span {
         margin: 20px 0 0;
         width: 100%;
         font-size: 18px;
+}
+
+#welcomeWindow, #endWindow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: fixed;
+        top: 0; left: 0;
+        margin: 0;
+        width: 100%; height: 100%;
+        background: var(--background);
+        z-index: 2;
+}
+
+#welcomeWindow h1, #endWindow h1, #endWindow p, #welcomeWindow p { animation: popOutFade 0.3s; }
+@keyframes popOutFade {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+}
+
+#welcomeWindow p, #endWindow p {
+        color: var(--text-color);
+        font-size: 18px;
+        width: 350px;
+}
+
+#welcomeWindow button {
+        position: absolute;
+        left: 50%; bottom: 100px;
+        border: none;
+        border-radius: 50px;
+        width: 150px; height: 60px;
+        transform: translateX(-50%);
+        background: #ffff;
+        color: var(--text-color);
+        font-size: 25px;
+        font-weight: 700;
+        text-align: center;
+        box-shadow: var(--shadow);
+        font-family: fredoka, roboto, sans-serif;
+} #welcomeWindow button { animation: popOutBtn 0.3s; }
+@keyframes popOutBtn {
+        0% { transform: scale(0.8) translateX(-50%); opacity: 0; }
+        100% { transform: scale(1) translateX(-50%); opacity: 1; }
+} #endWindow.hide { display: none; }
+
+#clue:not(.hide) {
+        position: fixed;
+        z-index: 2;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        backdrop-filter: blur(5px);
+        background: rgba(0,0,0,0.1);
+        animation: fade 0.3s;
+        display: grid;
+        place-items: center;
+} #clue.hide .AlertContainer { display: none; }
+
+#passwordInp {
+        background: #ffff;
+        border-radius: 8px;
+        width: 100%;
+        border: none;
+        font-family: fredoka, roboto, sans-serif;
+        padding: 13px;
+        margin: 10px;
+        color: var(--text-color);
+} #passwordInp::placeholder { color: var(--text-color); }
+#clue .submit { right: 120px; }
+
+.requestBox {
+        background: var(--accent3);
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: var(--text-color);
+        animation: popOutFade 0.3s;
 }
